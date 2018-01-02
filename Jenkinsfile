@@ -8,7 +8,9 @@ properties ([
 		pollSCM('H/30 * * * *')
 	]),
 ])
-
+if(env.BRANCH_NAME ==~ /master$/) {
+		return
+}
 
 node ("linux") {
 
@@ -28,15 +30,12 @@ node ("linux") {
 	env.CI_BUILD_VERSION = Branch.getSemanticVersion(this)
 	env.CI_DOCKER_ORGANIZATION = Accounts.GIT_ORGANIZATION
 
-	def artifactory = Artifactory.server env.CI_ARTIFACTORY_SERVER_ID
-  def buildInfo = Artifactory.newBuildInfo()
+	// def artifactory = Artifactory.server env.CI_ARTIFACTORY_SERVER_ID
+  // def buildInfo = Artifactory.newBuildInfo()
 
 	currentBuild.result = "SUCCESS"
 	def errorMessage = null
 
-	if(env.BRANCH_NAME ==~ /master$/) {
-			return
-	}
 
 	wrap([$class: 'TimestamperBuildWrapper']) {
 		wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
@@ -61,16 +60,17 @@ node ("linux") {
 					stage ("deploy") {
 							sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
 
-							def uploadSpec = """{
-  "files": [
-    {
-      "pattern": "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip",
-      "target": "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip"
-    }
- ]
-}"""
-						artifactory.upload(uploadSpec, buildInfo)
-						artifactory.publishBuildInfo(buildInfo)
+// 							def uploadSpec = """{
+//   "files": [
+//     {
+//       "pattern": "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip",
+//       "target": "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip"
+//     }
+//  ]
+// }"""
+// 						artifactory.upload(uploadSpec, buildInfo)
+// 						artifactory.publishBuildInfo(buildInfo)
+							Pipeline.publish_artifact(this, "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "")
 					}
 					stage ('cleanup') {
 							// this only will publish if the incominh branch IS develop
