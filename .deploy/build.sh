@@ -30,6 +30,6 @@ mkdir -p "${WORKSPACE}/dist/";
 pushd .;
 cd ${WORKSPACE}/root;
 pwd;
-zip -r "${opt_project_name}-${opt_version}.zip" "*";
+zip -r "${opt_project_name}-${opt_version}.zip" *;
 mv "${opt_project_name}-${opt_version}.zip" "${WORKSPACE}/dist/";
 popd;
