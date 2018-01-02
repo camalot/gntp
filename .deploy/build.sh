@@ -29,6 +29,7 @@ echo "${opt_project_name}-${opt_version}.zip";
 mkdir -p "${WORKSPACE}/dist/";
 pushd .;
 cd ${WORKSPACE}/root;
-zip -r "${opt_project_name}-${opt_version}.zip" "./*";
+pwd;
+zip -r "${opt_project_name}-${opt_version}.zip" "*";
 mv "${opt_project_name}-${opt_version}.zip" "${WORKSPACE}/dist/";
 popd;
