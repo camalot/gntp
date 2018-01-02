@@ -6,7 +6,7 @@ base_dir=$(dirname $0);
 
 
 get_opts() {
-	while getopts ":n:f" opt; do
+	while getopts ":n:v" opt; do
 	  case $opt in
 			n) export opt_project_name="$OPTARG";
 			;;
