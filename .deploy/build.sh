@@ -5,7 +5,7 @@ base_dir=$(dirname $0);
 . ${base_dir}/shared.sh;
 
 get_opts() {
-	while getopts ":p:f" opt; do
+	while getopts ":n:f" opt; do
 	  case $opt in
 			n) export opt_project_name="$OPTARG";
 			;;
