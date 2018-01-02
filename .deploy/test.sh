@@ -28,4 +28,6 @@ get_opts $@;
 
 ls -lfA "${WORKSPACE}/dist/";
 
-unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/dist/"
+unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/dist/" > /dev/null
+
+ls -lfA "${WORKSPACE}/dist/";

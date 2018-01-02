@@ -29,6 +29,6 @@ echo "${opt_project_name}-${opt_version}.zip";
 mkdir -p "${WORKSPACE}/dist/";
 pushd;
 cd ${WORKSPACE}/root;
-zip -r "${WORKSPACE}/dist/${opt_project_name}-${opt_version}.zip" "root/usr";
+zip -r "${WORKSPACE}/dist/${opt_project_name}-${opt_version}.zip" "root/usr" > /dev/null;
 
 
