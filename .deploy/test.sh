@@ -26,8 +26,16 @@ get_opts() {
 
 get_opts $@;
 
-ls -lfA "${WORKSPACE}/dist/";
-
 unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/dist/" > /dev/null
 
-ls -lfA "${WORKSPACE}/dist/";
+[[ ! -d ${WORKSPACE}/dist/usr ]] && __error "usr/ directory missing";
+[[ ! -d ${WORKSPACE}/dist/usr/include ]] && __error "usr/include directory missing";
+[[ ! -f ${WORKSPACE}/dist/usr/include/growl.h ]] && __error "usr/include/growl.h missing";
+[[ ! -d ${WORKSPACE}/dist/usr/lib ]] && __error "usr/lib directory missing";
+[[ ! -f ${WORKSPACE}/dist/usr/lib/libgrowl.so ]] && __error "usr/lib/libgrowl.so missing";
+[[ ! -d ${WORKSPACE}/dist/usr/local ]] && __error "usr/local directory missing";
+[[ ! -d ${WORKSPACE}/dist/usr/local/bin ]] && __error "usr/local/bin directory missing";
+[[ ! -f ${WORKSPACE}/dist/usr/local/bin/gntp-send ]] && __error "usr/local/bin/gntp-send missing";
+[[ ! -f ${WORKSPACE}/dist/usr/local/bin/gntp.sh ]] && __error "usr/local/bin/gntp missing";
+
+rm -rf ${WORKSPACE}/dist/usr;
