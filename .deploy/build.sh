@@ -27,8 +27,8 @@ get_opts $@;
 
 echo "${opt_project_name}-${opt_version}.zip";
 mkdir -p "${WORKSPACE}/dist/";
-pushd;
+pushd .;
 cd ${WORKSPACE}/root;
-zip -r "${WORKSPACE}/dist/${opt_project_name}-${opt_version}.zip" "root/usr" > /dev/null;
+zip -r "${WORKSPACE}/dist/${opt_project_name}-${opt_version}.zip" "${WORKSPACE}/root/usr" > /dev/null;
 
-
+popd;
