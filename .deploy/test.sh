@@ -6,7 +6,7 @@ base_dir=$(dirname $0);
 
 
 get_opts() {
-	while getopts ":n:v" opt; do
+	while getopts ":n:v:" opt; do
 	  case $opt in
 			n) export opt_project_name="$OPTARG";
 			;;
@@ -26,6 +26,6 @@ get_opts() {
 
 get_opts $@;
 
-ls -lfA "${base_dir}/dist/";
+ls -lfA "${base_dir}/../dist/";
 
-unzip "${base_dir}/dist/$opt_project_name-$opt_version.zip" -d "${base_dir}/dist/"
+unzip "${base_dir}/../dist/$opt_project_name-$opt_version.zip" -d "${base_dir}/../dist/"

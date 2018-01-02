@@ -5,7 +5,7 @@ base_dir=$(dirname $0);
 . ${base_dir}/shared.sh;
 
 get_opts() {
-	while getopts ":n:v" opt; do
+	while getopts ":n:v:" opt; do
 	  case $opt in
 			n) export opt_project_name="$OPTARG";
 			;;
@@ -25,7 +25,9 @@ get_opts() {
 
 get_opts $@;
 
-mkdir -p "${base_dir}/dist/";
-zip -r "${base_dir}/dist/${opt_project_name}-${opt_version}.zip" "${base_dir}/usr";
+echo "${opt_project_name}-${opt_version}.zip";
+
+mkdir -p "${base_dir}/../dist/";
+zip -r "${base_dir}/../dist/${opt_project_name}-${opt_version}.zip" "${base_dir}/../usr";
 
 
