@@ -69,8 +69,8 @@ node ("linux") {
     }
  ]
 }"""
-						server.upload(uploadSpec, buildInfo)
-						server.publishBuildInfo(buildInfo)
+						artifactory.upload(uploadSpec, buildInfo)
+						artifactory.publishBuildInfo(buildInfo)
 					}
 					stage ('cleanup') {
 							// this only will publish if the incominh branch IS develop
