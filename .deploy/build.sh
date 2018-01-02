@@ -26,8 +26,9 @@ get_opts() {
 get_opts $@;
 
 echo "${opt_project_name}-${opt_version}.zip";
-
-mkdir -p "${base_dir}/../dist/";
-zip -r "${base_dir}/../dist/${opt_project_name}-${opt_version}.zip" "${base_dir}/../usr";
+mkdir -p "${WORKSPACE}/dist/";
+pushd;
+cd ${base_dir}/../root;
+zip -r "${WORKSPACE}/dist/${opt_project_name}-${opt_version}.zip" "usr";
 
 

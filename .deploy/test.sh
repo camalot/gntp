@@ -26,6 +26,6 @@ get_opts() {
 
 get_opts $@;
 
-ls -lfA "${base_dir}/../dist/";
+ls -lfA "${WORKSPACE}/dist/";
 
-unzip "${base_dir}/../dist/$opt_project_name-$opt_version.zip" -d "${base_dir}/../dist/"
+unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/dist/"
