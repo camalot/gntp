@@ -11,6 +11,8 @@ properties ([
 
 
 node ("linux") {
+
+
 	def ProjectName = "gntp"
 	def teamName = "docker-scripts"
 	def slack_notify_channel = null
@@ -25,6 +27,10 @@ node ("linux") {
 	
 	env.CI_BUILD_VERSION = Branch.getSemanticVersion(this)
 	env.CI_DOCKER_ORGANIZATION = Accounts.GIT_ORGANIZATION
+
+	def artifactory = Artifactory.server env.CI_ARTIFACTORY_SERVER_ID
+  def buildInfo = Artifactory.newBuildInfo()
+
 	currentBuild.result = "SUCCESS"
 	def errorMessage = null
 
@@ -38,7 +44,9 @@ node ("linux") {
 			try {
 					stage ("install" ) {
 							deleteDir()
+							// buildInfo.retention maxBuilds: 1, maxDays: 2, doNotDiscardBuilds: ["3"], deleteBuildArtifacts: true
 							Branch.checkout_vsts(this, teamName, ProjectName)
+
 							Pipeline.install(this)
 					}
 					stage ("build") {
@@ -52,6 +60,17 @@ node ("linux") {
 					}
 					stage ("deploy") {
 							sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+
+							def uploadSpec = """{
+  "files": [
+    {
+      "pattern": "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip",
+      "target": "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip"
+    }
+ ]
+}"""
+						server.upload(uploadSpec, buildInfo)
+						server.publishBuildInfo(buildInfo)
 					}
 					stage ('cleanup') {
 							// this only will publish if the incominh branch IS develop
