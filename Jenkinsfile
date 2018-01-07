@@ -29,9 +29,7 @@ node ("linux") {
 	
 	env.CI_BUILD_VERSION = Branch.getSemanticVersion(this)
 	env.CI_DOCKER_ORGANIZATION = Accounts.GIT_ORGANIZATION
-
-	// def artifactory = Artifactory.server env.CI_ARTIFACTORY_SERVER_ID
-  // def buildInfo = Artifactory.newBuildInfo()
+	env.CI_PROJECT_NAME = "${ProjectName}"
 
 	currentBuild.result = "SUCCESS"
 	def errorMessage = null
@@ -42,40 +40,28 @@ node ("linux") {
 			Notify.slack(this, "STARTED", null, slack_notify_channel)
 			try {
 					stage ("install" ) {
-							deleteDir()
-							// buildInfo.retention maxBuilds: 1, maxDays: 2, doNotDiscardBuilds: ["3"], deleteBuildArtifacts: true
-							Branch.checkout_vsts(this, teamName, ProjectName)
-
-							Pipeline.install(this)
+						deleteDir()
+						Branch.checkout_vsts(this, teamName, ProjectName)
+						Pipeline.install(this)
 					}
 					stage ("build") {
-							sh script: "${WORKSPACE}/.deploy/build.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+						sh script: "${WORKSPACE}/.deploy/build.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
 					}
 					stage ("test") {
-							withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.CI_ARTIFACTORY_CREDENTIAL_ID,
-							 								usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD']]) {
-							 		sh script: "${WORKSPACE}/.deploy/test.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
-							}
+						withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.CI_ARTIFACTORY_CREDENTIAL_ID,
+						 								usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD']]) {
+						 		sh script: "${WORKSPACE}/.deploy/test.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+						}
 					}
 					stage ("deploy") {
-							sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
-
-// 							def uploadSpec = """{
-//   "files": [
-//     {
-//       "pattern": "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip",
-//       "target": "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip"
-//     }
-//  ]
-// }"""
-// 						artifactory.upload(uploadSpec, buildInfo)
-// 						artifactory.publishBuildInfo(buildInfo)
-							Pipeline.publish_artifact(this, "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "")
+						sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
 					}
-					stage ('cleanup') {
-							// this only will publish if the incominh branch IS develop
-							Branch.publish_to_master(this)
-							Pipeline.cleanup(this)
+					stage ('publish') {
+						// this only will publish if the incominh branch IS develop
+						Branch.publish_to_master(this)
+						Pipeline.upload_artifact(this, "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "")
+						Pipeline.publish_buildInfo(this)
+						Pipeline.cleanup(this)
 					}
 			} catch(err) {
 				currentBuild.result = "FAILURE"
@@ -83,14 +69,7 @@ node ("linux") {
 				throw err
 			}
 			finally {
-				if(currentBuild.result == "SUCCESS") {
-					if (Branch.isMasterOrDevelopBranch(this)) {
-						currentBuild.displayName = "${env.CI_BUILD_VERSION}"
-					} else {
-						currentBuild.displayName = "${env.CI_BUILD_VERSION} [#${env.BUILD_NUMBER}]"
-					}
-				}
-				Notify.slack(this, currentBuild.result, errorMessage)
+				Publish.finish(this, currentBuild.result, errorMessage)
 			}
 		}
 	}
