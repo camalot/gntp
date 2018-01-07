@@ -69,7 +69,7 @@ node ("linux") {
 				throw err
 			}
 			finally {
-				Publish.finish(this, currentBuild.result, errorMessage)
+				Pipeline.finish(this, currentBuild.result, errorMessage)
 			}
 		}
 	}
