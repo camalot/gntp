@@ -42,10 +42,10 @@ __gntp() {
 	[[ -z "${_opt_message// }" ]] && __error "Missing required message argument (-m|--message)";
 
 	# gntp-send: [-u] [-i] [-a APPNAME] [-n NOTIFY] [-s SERVER:PORT] [-p PASSWORD] title message [icon] [url]
-	echo "gntp-send -s \"${GNTP_HOST}\" -a \"${GNTP_APP}\" -p \"*******************\" \"$_opt_title\" \"$_opt_message\"";
+	echo "gntp-send -s \"${GNTP_HOST}\" -a \"${app_name}\" -p \"*******************\" \"$_opt_title\" \"$_opt_message\"";
 	gntp-send \
 	-s "${GNTP_HOST}" \
-	-a "${GNTP_APP:-"${JENKINS_CLOUD_ID}-${DOCKER_CONTAINER_ID}"}" \
+	-a "${app_name:-"${JENKINS_CLOUD_ID}-${DOCKER_CONTAINER_ID}"}" \
 	-p "${GNTP_PASSWORD}" \
 	"$_opt_title" \
 	"$_opt_message";
