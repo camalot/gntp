@@ -51,4 +51,4 @@ __gntp() {
 	"$_opt_message";
 }
 
-__gntp $@;
+__gntp "$@";
