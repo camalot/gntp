@@ -17,5 +17,7 @@ RUN \
 	ls -lFA /us/local/bin && \
 	ls -lFA /usr/include;
 
+RUN find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
+
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
