@@ -14,7 +14,8 @@ RUN \
 	chmod +x /usr/local/bin/gntp && \
 	chmod +x /usr/local/bin/gntp-send && \
 	echo "$PATH" && \
-	ls -lFA ~;
+	ls -lFA ~ && \
+	which gntp-send;
 
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
