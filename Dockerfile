@@ -15,8 +15,13 @@ LABEL \
 	MAINTAINER="camalot <camalot@gmail.com>"
 
 
-RUN addgroup -g ${PGID} abc && \
-	adduser -u ${PUID} -G abc -s /bin/bash -D abc;
+# RUN addgroup -g ${PGID} abc && \
+# 	adduser -u ${PUID} -G abc -s /bin/bash -D abc;
+
+RUN groupadd -g ${PGID} abc \
+	&& useradd -d "/home/abc" -u "${PUID}" -g "${PGID}" -m -s /bin/bash "abc" && \
+	chsh -s /bin/bash abc;
+
 
 RUN \
 	apt-get update && \
