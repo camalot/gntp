@@ -25,7 +25,7 @@ RUN groupadd -g ${PGID} abc \
 
 RUN \
 	apt-get update && \
-	apt-get install --no-cache curl unzip bash -yq && \
+	apt-get install curl unzip bash -yq && \
 	rm -rf /var/cache/apt/* && \
 	apt-get clean && \
 	curl --insecure -s "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
