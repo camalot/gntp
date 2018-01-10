@@ -16,10 +16,11 @@ LABEL \
 
 
 RUN addgroup -g ${PGID} abc && \
-	adduser -D -u ${PUID} -G abc abc;
+	adduser -u ${PUID} -G abc -s /bin/bash -D abc;
 
 RUN \
 	apk add --no-cache curl unzip bash && \
+	&& rm -rf /var/cache/apk/* && \
 	curl --insecure -s "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
 	cd /tmp && \
 	unzip gntp.zip -d / && \
