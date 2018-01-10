@@ -1,13 +1,11 @@
 FROM alpine:latest
 
-ARG PROJECT_NAME="jenkins-agent-base"
+ARG PROJECT_NAME="gntp"
 ARG BUILD_VERSION="1.0.0-snapshot"
 ARG GNTP_VERSION="${BUILD_VERSION}"
 
 ARG PUID=1000
 ARG PGID=1000
-ARG GNTP_HOME=/home/${user}
-
 
 LABEL \
 	LABEL="${PROJECT_NAME}-v${BUILD_VERSION}" \
@@ -34,5 +32,8 @@ RUN \
 	ls -lFA /usr/local/bin && \
 	ls -lFA /usr/lib
 
-CMD [ "/bin/bash" ]
+USER abc 
+
+WORKDIR "/usr/local/bin"
+
 ENTRYPOINT ["/usr/local/bin/gntp"]
