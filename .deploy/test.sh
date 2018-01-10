@@ -24,7 +24,7 @@ get_opts() {
 	return 0;
 };
 
-get_opts $@;
+get_opts "$@";
 
 unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/dist/" > /dev/null
 
@@ -38,4 +38,4 @@ unzip "${WORKSPACE}/dist/$opt_project_name-$opt_version.zip" -d "${WORKSPACE}/di
 [[ ! -f ${WORKSPACE}/dist/usr/local/bin/gntp-send ]] && __error "usr/local/bin/gntp-send missing";
 [[ ! -f ${WORKSPACE}/dist/usr/local/bin/gntp.sh ]] && __error "usr/local/bin/gntp missing";
 
-rm -rf ${WORKSPACE}/dist/usr;
+rm -rf "${WORKSPACE}/dist/usr";

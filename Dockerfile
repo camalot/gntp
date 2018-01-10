@@ -13,9 +13,9 @@ RUN \
 	mv /usr/local/bin/gntp.sh /usr/local/bin/gntp && \
 	chmod +x /usr/local/bin/gntp && \
 	chmod +x /usr/local/bin/gntp-send && \
-	echo "$PATH" && \
-	ls -lFA ~ && \
-	which gntp-send;
+	ls -lFA /usr/lib && \
+	ls -lFA /us/local/bin && \
+	ls -lFA /usr/include;
 
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
