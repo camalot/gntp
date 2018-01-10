@@ -1,4 +1,6 @@
-FROM alpine:latest
+# FROM alpine:latest
+FROM debian:latest 
+
 
 ARG PROJECT_NAME="gntp"
 ARG BUILD_VERSION="1.0.0-snapshot"
@@ -17,8 +19,10 @@ RUN addgroup -g ${PGID} abc && \
 	adduser -u ${PUID} -G abc -s /bin/bash -D abc;
 
 RUN \
-	apk add --no-cache curl unzip bash && \
-	rm -rf /var/cache/apk/* && \
+	apt-get update && \
+	apt-get install --no-cache curl unzip bash -yq && \
+	rm -rf /var/cache/apt/* && \
+	apt-get clean && \
 	curl --insecure -s "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
 	cd /tmp && \
 	unzip gntp.zip -d / && \
