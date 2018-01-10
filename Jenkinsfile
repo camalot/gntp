@@ -41,27 +41,27 @@ node ("linux") {
 			try {
 					stage ("install" ) {
 						deleteDir()
-						Branch.checkout_vsts(this, teamName, ProjectName)
+						Branch.checkout_vsts(this, teamName, env.CI_PROJECT_NAME)
 						Pipeline.install(this)
 					}
 					stage ("build") {
-						sh script: "${WORKSPACE}/.deploy/build.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+						sh script: "${WORKSPACE}/.deploy/build.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 					}
 					stage ("test") {
 						withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.CI_ARTIFACTORY_CREDENTIAL_ID,
 						 								usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD']]) {
-						 		sh script: "${WORKSPACE}/.deploy/test.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+						 		sh script: "${WORKSPACE}/.deploy/test.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 						}
 					}
 					stage ("deploy") {
-						sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${ProjectName}' -v '${env.CI_BUILD_VERSION}'"
+						sh script: "${WORKSPACE}/.deploy/deploy.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 					}
 					stage ('publish') {
 						// this only will publish if the incominh branch IS develop
 						Branch.publish_to_master(this)
-						Pipeline.upload_artifact(this, "dist/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "generic-local/${ProjectName}/${env.CI_BUILD_VERSION}/${ProjectName}-${env.CI_BUILD_VERSION}.zip", "")
+						Pipeline.upload_artifact(this, "dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "generic-local/${env.CI_PROJECT_NAME}/${env.CI_BUILD_VERSION}/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "")
 						Pipeline.publish_buildInfo(this)
-						Pipeline.cleanup(this)
+						sh script:  "${WORKSPACE}/.deploy/publish.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 					}
 			} catch(err) {
 				currentBuild.result = "FAILURE"
