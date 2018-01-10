@@ -4,10 +4,8 @@ ARG PROJECT_NAME="jenkins-agent-base"
 ARG BUILD_VERSION="1.0.0-snapshot"
 ARG GNTP_VERSION="${BUILD_VERSION}"
 
-ARG user=gntp
-ARG group=gntp
-ARG uid=1000
-ARG gid=1000
+ARG PUID=1000
+ARG PGID=1000
 ARG GNTP_HOME=/home/${user}
 
 
@@ -17,10 +15,9 @@ LABEL \
 	MAINTAINER="camalot <camalot@gmail.com>"
 
 
-RUN groupadd -g ${gid} ${group} \
-	&& useradd -d "${GNTP_HOME}" -u "${uid}" -g "${gid}" -m -s /bin/bash "${user}" && \
-	chsh -s /bin/bash ${user};
-	
+RUN addgroup -g ${PGID} abc && \
+	adduser -D -u ${PUID} -G abc abc;
+
 RUN \
 	apk add --no-cache curl unzip bash && \
 	curl --insecure -s "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
