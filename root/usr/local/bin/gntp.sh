@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e;
 __error() {
 	RED='\033[0;31m';

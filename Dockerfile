@@ -14,10 +14,14 @@ RUN \
 	cd /tmp && \
 	unzip gntp.zip -d / && \
 	mv /usr/local/bin/gntp.sh /usr/local/bin/gntp && \
-	chmod +x /usr/local/bin/gntp && \
-	chmod +x /usr/local/bin/gntp-send;
+	chmod o+x /usr/local/bin/gntp && \
+	chmod o+x /usr/local/bin/gntp-send;
 
-RUN find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
+RUN find /usr/lib/libgrowl.* -type f -exec chmod o+rx {} \;
+
+RUN \
+	ls -lFA /usr/local/bin && \
+	ls -lFA /usr/lib
 
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
