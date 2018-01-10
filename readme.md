@@ -16,10 +16,17 @@ find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
 
 # Docker
 
+### Environment Variables
+
+`GNTP_HOST`: (Required) GNTP Host to push the message to
+`GNTP_PASSWORD`: The password for pushing to the `GNTP_HOST`
+`GNTP_APP`: Another way to set the app name that is identified to the `GNTP_HOST`
+
 ```
 docker run \
 	-e GNTP_HOST=YOUR_GNTP_HOST \
-	-e GNTP_PASSWORD=HOST_GNTP_PASSWORD 
+	-e GNTP_PASSWORD=HOST_GNTP_PASSWORD \
+	-e GNTP_APP="APP NAME"\ 
 	docker.artifactory.bit13.local/camalot/gntp:latest \
-	--app="APP NAME" --title="MESSAGE TITLE" --message="MESSAGE"
+	--title="MESSAGE TITLE" --message="MESSAGE"
 ```
