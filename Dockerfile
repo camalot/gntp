@@ -11,7 +11,9 @@ RUN \
 	cd /tmp && \
 	unzip gntp.zip -d / && \
 	mv /usr/local/bin/gntp.sh /usr/local/bin/gntp && \
-	chmod +x /usr/local/bin/gntp;
+	chmod +x /usr/local/bin/gntp && \
+	chmod +x /usr/local/bin/gntp-send && \
+	ls -lFA /usr/local/bin;
 
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
