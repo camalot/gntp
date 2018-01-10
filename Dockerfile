@@ -19,5 +19,7 @@ RUN \
 
 RUN find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
 
+RUN	ls -lFA /usr/lib;
+
 CMD [ "/bin/bash" ]
 ENTRYPOINT ["/usr/local/bin/gntp"]
