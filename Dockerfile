@@ -14,7 +14,7 @@ RUN \
 	chmod +x /usr/local/bin/gntp && \
 	chmod +x /usr/local/bin/gntp-send && \
 	ls -lFA /usr/lib && \
-	ls -lFA /us/local/bin && \
+	ls -lFA /usr/local/bin && \
 	ls -lFA /usr/include;
 
 RUN find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
