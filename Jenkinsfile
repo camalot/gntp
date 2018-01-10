@@ -60,6 +60,7 @@ node ("linux") {
 						// this only will publish if the incominh branch IS develop
 						Branch.publish_to_master(this)
 						Pipeline.upload_artifact(this, "dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "generic-local/${env.CI_PROJECT_NAME}/${env.CI_BUILD_VERSION}/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "")
+						Pipeline.upload_artifact(this, "dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "generic-local/${env.CI_PROJECT_NAME}/latest/${env.CI_PROJECT_NAME}-latest.zip", "")
 						Pipeline.publish_buildInfo(this)
 						sh script:  "${WORKSPACE}/.deploy/publish.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 					}
