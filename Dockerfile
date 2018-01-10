@@ -2,7 +2,7 @@ FROM alpine:latest
 
 ARG PROJECT_NAME="jenkins-agent-base"
 ARG BUILD_VERSION="1.0.0-snapshot"
-
+ARG GNTP_VERSION="1.0.37"
 LABEL LABEL="${PROJECT_NAME}-v${BUILD_VERSION}" VERSION="${BUILD_VERSION}" MAINTAINER="camalot <camalot@gmail.com>"
 
 RUN \
