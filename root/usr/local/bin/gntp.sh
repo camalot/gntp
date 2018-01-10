@@ -45,7 +45,8 @@ __gntp() {
 	# gntp-send: [-u] [-i] [-a APPNAME] [-n NOTIFY] [-s SERVER:PORT] [-p PASSWORD] title message [icon] [url]
 	echo "gntp-send -s \"${GNTP_HOST}\" -a \"${app_name}\" -p \"*******************\" \"$_opt_title\" \"$_opt_message\"";
 	echo "user: $USER";
-	which gntp-send;
+	
+	printenv
 	gntp-send \
 	-s "${GNTP_HOST}" \
 	-a "${app_name:-"${JENKINS_CLOUD_ID}-${DOCKER_CONTAINER_ID}"}" \
