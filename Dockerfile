@@ -3,6 +3,7 @@ FROM alpine:latest
 ARG PROJECT_NAME="jenkins-agent-base"
 ARG BUILD_VERSION="1.0.0-snapshot"
 
+
 LABEL \
 	LABEL="${PROJECT_NAME}-v${BUILD_VERSION}" \
 	VERSION="${BUILD_VERSION}" \
