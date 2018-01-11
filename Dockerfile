@@ -27,8 +27,8 @@ RUN \
 	apt-get install curl unzip bash -yq && \
 	rm -rf /var/cache/apt/* && \
 	apt-get clean && \
-	curl -s "https://github.com/camalot/gntp-send/releases/download/${GNTP_SEND_VERSION}/gntp-send-${GNTP_SEND_VERSION}.zip" -o /tmp/gntp-send.zip && \
-	curl --insecure -s "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
+	curl -Ls "https://github.com/camalot/gntp-send/releases/download/${GNTP_SEND_VERSION}/gntp-send-${GNTP_SEND_VERSION}.zip" -o /tmp/gntp-send.zip && \
+	curl --insecure -Ls "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/${GNTP_VERSION}/gntp-${GNTP_VERSION}.zip" -o /tmp/gntp.zip && \
 	cd /tmp && \
 	unzip gntp.zip -d / && \
 	unzip gntp-send.zip -d / && \
