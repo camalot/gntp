@@ -30,3 +30,9 @@ docker run \
 	docker.artifactory.bit13.local/camalot/gntp:latest \
 	--title="MESSAGE TITLE" --message="MESSAGE"
 ```
+
+
+## References
+
+[gntp-send github](https://github.com/mattn/gntp-send/blob/master/README.md)  
+[gntp-send launchpad](https://launchpad.net/~mattn/+archive/ubuntu/gntp-send)
