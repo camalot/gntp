@@ -39,7 +39,7 @@ node ("linux") {
 			try {
 					stage ("install" ) {
 						deleteDir()
-						Branch.checkout(this, teamName, env.CI_PROJECT_NAME)
+						Branch.checkout(this,  env.CI_PROJECT_NAME)
 						Pipeline.install(this)
 					}
 					stage ("build") {
