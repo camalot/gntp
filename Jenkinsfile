@@ -1,28 +1,26 @@
 #!groovy
 import com.bit13.jenkins.*
 
-properties ([
-	buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5')),
-	disableConcurrentBuilds(),
-	pipelineTriggers([
-		pollSCM('H/30 * * * *')
-	]),
-])
 if(env.BRANCH_NAME ==~ /master$/) {
 		return
 }
 
 node ("linux") {
-
-
 	def ProjectName = "gntp"
-	def teamName = "docker-scripts"
 	def slack_notify_channel = null
 
 	def SONARQUBE_INSTANCE = "bit13"
 
 	def MAJOR_VERSION = 1
 	def MINOR_VERSION = 0
+
+	properties ([
+		buildDiscarder(logRotator(numToKeepStr: '25', artifactNumToKeepStr: '25')),
+		disableConcurrentBuilds(),
+		pipelineTriggers([
+			pollSCM('H/30 * * * *')
+		]),
+	])
 
 	env.PROJECT_MAJOR_VERSION = MAJOR_VERSION
 	env.PROJECT_MINOR_VERSION = MINOR_VERSION
@@ -41,7 +39,7 @@ node ("linux") {
 			try {
 					stage ("install" ) {
 						deleteDir()
-						Branch.checkout_vsts(this, teamName, env.CI_PROJECT_NAME)
+						Branch.checkout(this, teamName, env.CI_PROJECT_NAME)
 						Pipeline.install(this)
 					}
 					stage ("build") {
@@ -62,6 +60,10 @@ node ("linux") {
 						Pipeline.upload_artifact(this, "dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "generic-local/${env.CI_PROJECT_NAME}/${env.CI_BUILD_VERSION}/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "")
 						Pipeline.upload_artifact(this, "dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", "generic-local/${env.CI_PROJECT_NAME}/latest/${env.CI_PROJECT_NAME}-latest.zip", "")
 						Pipeline.publish_buildInfo(this)
+						
+						Pipeline.publish_github(this, Accounts.GIT_ORGANIZATION, env.CI_PROJECT_NAME, env.CI_BUILD_VERSION, 
+						"${WORKSPACE}/dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", false, false)
+
 						sh script:  "${WORKSPACE}/.deploy/publish.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
 					}
 			} catch(err) {

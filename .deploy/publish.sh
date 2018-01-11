@@ -26,15 +26,15 @@ get_opts "$@";
 
 
 PROJECT_NAME="${opt_project_name:-"${CI_PROJECT_NAME}"}";
-PUSH_REGISTRY="${DOCKER_PUSH_REGISTRY:-"docker-local.artifactory.bit13.local"}"
+PUSH_REGISTRY="${DOCKER_PUSH_REGISTRY}";
 BUILD_VERSION=${CI_BUILD_VERSION:-"1.0.0-snapshot"};
 DOCKER_ORG="camalot";
 tag="${DOCKER_ORG}/${PROJECT_NAME}";
 tag_name_latest="${tag}:latest";
 tag_name_ver="${tag}:${BUILD_VERSION}";
 
-[[ -p "${PROJECT_NAME// }" ]] && __error "'-p' (project name) attribute is required.";
-[[ -p "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
+[[ -z "${PROJECT_NAME// }" ]] && __error "'-p' (project name) attribute is required.";
+[[ -z "${BUILD_VERSION// }" ]] && __error "'-v' (version) attribute is required.";
 
 docker build $opt_force--pull \
 	--build-arg BUILD_VERSION="${BUILD_VERSION}" \
@@ -44,8 +44,10 @@ docker build $opt_force--pull \
 
 [[ ! $BUILD_VERSION =~ -snapshot$ ]] && \
 	docker tag "${tag_name_ver}" "${tag_name_latest}" && \
-	docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_latest}" && \
-	docker push "${PUSH_REGISTRY}/${tag_name_latest}";
+	[[ ! -z "${PUSH_REGISTRY// }" ]] && \
+		docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_latest}" && \
+		docker push "${PUSH_REGISTRY}/${tag_name_latest}";
 
-docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_ver}";
-docker push "${PUSH_REGISTRY}/${tag_name_ver}";
+[[ ! -z "${PUSH_REGISTRY// }" ]] && \
+	docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_ver}" && \
+	docker push "${PUSH_REGISTRY}/${tag_name_ver}";

@@ -5,8 +5,10 @@ A command line script to call growl notification
 # Installation 
 
 ```
-curl --insecure -sL "https://artifactory.bit13.local:443/artifactory/generic-local/gntp/latest/gntp-latest.zip" -o /tmp/gntp.zip
+curl -sL "https://github.com/camalot/gntp-send/releases/download/1.0.23/gntp-send-1.0.23.zip" -o /tmp/gntp-send.zip;
+curl -sL "https://github.com/camalot/gntp/releases/download/VERSION/gntp-VERSION.zip" -o /tmp/gntp.zip;
 cd /tmp || exit 9;
+unzip gntp-send.zip -d /;
 unzip gntp.zip -d /;
 mv /usr/local/bin/gntp.sh /usr/local/bin/gntp;
 chmod +x /usr/local/bin/gntp;
@@ -27,12 +29,13 @@ docker run \
 	-e GNTP_HOST=YOUR_GNTP_HOST \
 	-e GNTP_PASSWORD=HOST_GNTP_PASSWORD \
 	-e GNTP_APP="APP NAME"\ 
-	docker.artifactory.bit13.local/camalot/gntp:latest \
+	camalot/gntp:latest \
 	--title="MESSAGE TITLE" --message="MESSAGE"
 ```
 
 
 ## References
 
-[gntp-send github](https://github.com/mattn/gntp-send/blob/master/README.md)  
+[gntp-send github fork](https://github.com/camalot/gntp-send)  
+[gntp-send github](https://github.com/mattn/gntp-send)  
 [gntp-send launchpad](https://launchpad.net/~mattn/+archive/ubuntu/gntp-send)
