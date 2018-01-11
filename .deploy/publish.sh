@@ -42,12 +42,20 @@ docker build $opt_force--pull \
 	--tag "${tag_name_ver}" \
 	"${base_dir}/../";
 
-[[ ! $BUILD_VERSION =~ -snapshot$ ]] && \
-	docker tag "${tag_name_ver}" "${tag_name_latest}" && \
+if [[ ! $BUILD_VERSION =~ -snapshot$ ]]; then
+	docker tag "${tag_name_ver}" "${tag_name_latest}";
+	
 	[[ ! -z "${PUSH_REGISTRY// }" ]] && \
 		docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_latest}" && \
 		docker push "${PUSH_REGISTRY}/${tag_name_latest}";
 
+	[[ ! -z "${DOCKER_HUB_USERNAME// }" ]] && [[ ! -z "${DOCKER_HUB_PASSWORD// }" ]] && \
+		docker login --username "${DOCKER_HUB_USERNAME}" --password "${DOCKER_HUB_PASSWORD}" && \
+		docker push "${tag_name_latest}" && \
+		docker push "${tag_name_ver}";
+fi
+
 [[ ! -z "${PUSH_REGISTRY// }" ]] && \
 	docker tag "${tag_name_ver}" "${PUSH_REGISTRY}/${tag_name_ver}" && \
 	docker push "${PUSH_REGISTRY}/${tag_name_ver}";
+

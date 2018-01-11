@@ -63,8 +63,11 @@ node ("linux") {
 						
 						Pipeline.publish_github(this, Accounts.GIT_ORGANIZATION, env.CI_PROJECT_NAME, env.CI_BUILD_VERSION, 
 						"${WORKSPACE}/dist/${env.CI_PROJECT_NAME}-${env.CI_BUILD_VERSION}.zip", false, false)
-
-						sh script:  "${WORKSPACE}/.deploy/publish.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
+						
+						withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.CI_DOCKER_HUB_CREDENTIAL_ID,
+						 								usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD']]) {
+							sh script:  "${WORKSPACE}/.deploy/publish.sh -n '${env.CI_PROJECT_NAME}' -v '${env.CI_BUILD_VERSION}'"
+						}
 					}
 			} catch(err) {
 				currentBuild.result = "FAILURE"

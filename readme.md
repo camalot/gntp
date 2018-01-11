@@ -2,7 +2,7 @@
 
 A command line script to call growl notification
 
-# Installation 
+# Manual Installation 
 
 ```
 curl -sL "https://github.com/camalot/gntp-send/releases/download/1.0.23/gntp-send-1.0.23.zip" -o /tmp/gntp-send.zip;
