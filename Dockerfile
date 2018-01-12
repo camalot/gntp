@@ -33,6 +33,8 @@ RUN \
 RUN \
 	gntp_send_v=$(if [ "${GNTP_SEND_VERSION}" = "latest" ]; then curl -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -s https://api.github.com/repos/camalot/gntp-send/releases/latest | jq -r '.name'; else echo "${GNTP_SEND_VERSION}"; fi) && \
 	gntp_v=$(if [ "${GNTP_VERSION}" = "latest" ]; then curl -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -s https://api.github.com/repos/camalot/gntp/releases/latest | jq -r '.name'; else echo "${GNTP_VERSION}"; fi) && \
+	echo "gntp_v: ${gntp_v}" && \
+	echo "gntp_send_v: ${gntp_send_v}" && \
 	curl -Ls "https://github.com/camalot/gntp-send/releases/download/${gntp_send_v}/gntp-send-${gntp_send_v}.zip" -o /tmp/gntp-send.zip && \
 	curl -Ls "https://github.com/camalot/gntp/releases/download/${gntp_v}/gntp-${gntp_v}.zip" -o /tmp/gntp.zip && \
 	cd /tmp && \
