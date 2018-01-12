@@ -6,6 +6,7 @@ ARG PROJECT_NAME="gntp"
 ARG BUILD_VERSION="1.0.0-snapshot"
 ARG GNTP_VERSION="${BUILD_VERSION}"
 ARG GNTP_APP="${PROJECT_NAME}-${BUILD_VERSION}"
+ARG GITHUB_ACCESS_TOKEN
 ARG PUID=1000
 ARG PGID=1000
 
@@ -25,11 +26,13 @@ RUN groupadd -g ${PGID} abc \
 
 RUN \
 	apt-get update && \
-	apt-get install curl unzip bash -yq && \
+	apt-get install curl unzip bash jq -yq && \
 	rm -rf /var/cache/apt/* && \
-	apt-get clean && \
-	gntp_send_v=$(if [ "${GNTP_SEND_VERSION}" = "latest" ]; then curl -s https://api.github.com/repos/camalot/gntp-send/releases/latest | jq -r '.name'; else echo "${GNTP_SEND_VERSION}"; fi) && \
-	gntp_v=$(if [ "${GNTP_VERSION}" = "latest" ]; then curl -s https://api.github.com/repos/camalot/gntp/releases/latest | jq -r '.name'; else echo "${GNTP_VERSION}"; fi) && \
+	apt-get clean;
+
+RUN \
+	gntp_send_v=$(if [ "${GNTP_SEND_VERSION}" = "latest" ]; then curl -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -s https://api.github.com/repos/camalot/gntp-send/releases/latest | jq -r '.name'; else echo "${GNTP_SEND_VERSION}"; fi) && \
+	gntp_v=$(if [ "${GNTP_VERSION}" = "latest" ]; then curl -H "Authorization: token ${GITHUB_ACCESS_TOKEN}" -s https://api.github.com/repos/camalot/gntp/releases/latest | jq -r '.name'; else echo "${GNTP_VERSION}"; fi) && \
 	curl -Ls "https://github.com/camalot/gntp-send/releases/download/${gntp_send_v}/gntp-send-${gntp_send_v}.zip" -o /tmp/gntp-send.zip && \
 	curl -Ls "https://github.com/camalot/gntp/releases/download/${gntp_v}/gntp-${gntp_v}.zip" -o /tmp/gntp.zip && \
 	cd /tmp && \
@@ -40,8 +43,6 @@ RUN \
 	chmod +x /usr/local/bin/gntp-send;
 
 RUN find /usr/lib/libgrowl.* -type f -exec chmod +rx {} \;
-
-USER abc 
 
 WORKDIR "/usr/local/bin"
 
