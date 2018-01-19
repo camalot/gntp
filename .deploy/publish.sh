@@ -38,7 +38,7 @@ tag_name_ver="${tag}:${BUILD_VERSION}";
 
 docker build $opt_force--pull \
 	--build-arg BUILD_VERSION="${BUILD_VERSION}" \
-	--build-arg PORJECT_NAME="${PROJECT_NAME}" \
+	--build-arg PROJECT_NAME="${PROJECT_NAME}" \
 	--tag "${tag_name_ver}" \
 	"${base_dir}/../";
 
